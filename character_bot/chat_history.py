@@ -8,8 +8,10 @@ class ChatHistory:
     def __init__(self, messages: List[Message]):
         self._messages = deque(messages)
 
-    def get_message(self) -> Message:
-        return self._messages.popleft()
+    def get_message(self):
+        if len(self._messages) != 0:
+            return self._messages.popleft()
+        return None
 
     def __str__(self):
         result = "['"
