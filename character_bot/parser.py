@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 
 from typing import List
 
+from character_bot.chat_history import ChatHistory
 from character_bot.message import Message
 
 
@@ -9,13 +10,13 @@ class Parser:
     def __init__(self, html: str):
         self.html = html
 
-    def get_messages(self):
+    def get_messages(self) -> ChatHistory:
         authors = self._get_author_names()
         messages = self._get_messages_text()
         messages_list = []
         for author, message in zip(authors, messages):
             messages_list.append(Message(author, message))
-        return messages_list
+        return ChatHistory(messages_list)
 
     def _get_author_names(self) -> List[str]:
         authors = []
