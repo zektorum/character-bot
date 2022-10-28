@@ -29,6 +29,7 @@ class Parser:
             author = str(soup.find(class_="from_name"))
             if author == "None":
                 authors.append(previous_author)
+                author = previous_author
             else:
                 author = author.split("\n")[1]
                 authors.append(author)
