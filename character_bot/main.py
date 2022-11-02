@@ -1,5 +1,6 @@
 import asyncio
 import os
+import requests
 
 import dotenv
 
@@ -17,8 +18,14 @@ third_bot = Bot(name=os.getenv("SPY_NAME"), prefix="%")
 @second_bot.command()
 async def start_dialog(ctx):
     html_doc = ""
-    with open("messages.html", "r") as file:
-        html_doc = "".join(file.read())
+    if len(ctx.message.attachments) == 0:
+        with open("messages.html", "r") as file:
+            html_doc = "".join(file.read())
+    else:
+        url = ctx.message.attachments[0].url
+        response = requests.get(url)
+        response.encoding = "utf-8"
+        html_doc = response.text
     chat_history = Parser(html_doc).get_messages()
     bot_manager = BotManager(chat_history, first_bot, second_bot, third_bot)
     await bot_manager.send_chat_history()
