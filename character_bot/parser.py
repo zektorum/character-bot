@@ -2,8 +2,8 @@ from bs4 import BeautifulSoup
 
 from typing import List
 
-from character_bot.chat_history import ChatHistory
-from character_bot.message import Message
+from chat_history import ChatHistory
+from message import Message
 
 
 class Parser:

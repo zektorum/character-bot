@@ -3,7 +3,7 @@ import os
 import discord
 from discord.ext import commands
 
-from character_bot.message import Message
+from message import Message
 
 
 class Bot(commands.Bot):

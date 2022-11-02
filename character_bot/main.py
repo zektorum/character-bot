@@ -4,9 +4,9 @@ import requests
 
 import dotenv
 
-from character_bot.bot import Bot
-from character_bot.bot_manager import BotManager
-from character_bot.parser import Parser
+from bot import Bot
+from bot_manager import BotManager
+from parser import Parser
 
 
 dotenv.load_dotenv()

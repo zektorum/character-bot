@@ -1,6 +1,6 @@
 import asyncio
 
-from character_bot.chat_history import ChatHistory
+from chat_history import ChatHistory
 
 
 class BotManager:
