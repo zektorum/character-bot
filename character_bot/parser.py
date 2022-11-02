@@ -48,5 +48,9 @@ class Parser:
                 messages_list.append(previous_message)
             else:
                 current_message = current_message.split("\n")[1]
-                messages_list.append(current_message)
+                messages_list.append(self.replace_tg_symbols(self, current_message))
         return messages_list
+
+    @staticmethod
+    def replace_tg_symbols(self, text: str) -> str:
+        return text.replace("&lt;", "<").replace("&gt;", ">").replace("<br/>", "\n")
