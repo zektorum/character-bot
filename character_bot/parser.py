@@ -53,4 +53,4 @@ class Parser:
 
     @staticmethod
     def replace_tg_symbols(self, text: str) -> str:
-        return text.replace("&lt;", "<").replace("&gt;", ">").replace("<br/>", "\n")
+        return text.replace("&lt;", "<").replace("&gt;", ">").replace("<br/>", "\n").replace("*", "^")
