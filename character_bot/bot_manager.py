@@ -1,6 +1,6 @@
 import asyncio
 
-from chat_history import ChatHistory
+from character_bot.chat_history import ChatHistory
 
 
 class BotManager:
@@ -11,9 +11,15 @@ class BotManager:
             self._bots[bot.get_name()] = bot
 
     async def send_chat_history(self):
+        messages_count = len(self._chat_history.messages)
+        print(f"messages for sending: {messages_count}")
         message = self._chat_history.get_message()
+        i = 0
         while message is not None:
+            if i % 100 == 0:
+                print(f"messages sended: {i}/{messages_count - i}")
             author = message.get_message_author()
             bot = self._bots[author]
             await asyncio.create_task(bot.send_message(message))
             message = self._chat_history.get_message()
+            i += 1
