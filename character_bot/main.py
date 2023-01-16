@@ -4,9 +4,11 @@ import requests
 
 import dotenv
 
-from bot import Bot
-from bot_manager import BotManager
-from parser import Parser
+from character_bot.bot import Bot
+from character_bot.bot_manager import BotManager
+from character_bot.chat_history import ChatHistory
+from character_bot.file_reader import FileReader, ReadingMode
+from character_bot.parser import Parser
 
 
 dotenv.load_dotenv()
@@ -16,17 +18,26 @@ third_bot = Bot(name=os.getenv("SPY_NAME"), prefix="%")
 
 
 @second_bot.command()
-async def start_dialog(ctx):
-    html_doc = ""
-    if len(ctx.message.attachments) == 0:
-        with open("messages.html", "r") as file:
-            html_doc = "".join(file.read())
-    else:
-        url = ctx.message.attachments[0].url
-        response = requests.get(url)
-        response.encoding = "utf-8"
-        html_doc = response.text
-    chat_history = Parser(html_doc).get_messages()
+async def start_dialogue(ctx):
+    fl = None
+    if len(ctx.message.attachments) == 0 and os.path.exists("messages.html"):
+        fl = FileReader(ReadingMode.SINGLE_FILE, filename="messages.html")
+    elif len(ctx.message.attachments) == 0 and os.path.exists("messages/"):
+        fl = FileReader(ReadingMode.MULTIPLE_FILES, messages_count=len(os.listdir("messages/")))
+    elif len(ctx.message.attachments) == 1:
+        fl = FileReader(ReadingMode.FROM_ATTACHMENT, attachment_url=ctx.message.attachments[0].url)
+    html_doc = fl.read()
+    chat_history = None
+    if type(html_doc) == str:
+        chat_history = Parser(html_doc).get_messages()
+    elif type(html_doc) == list:
+        chat_history = ChatHistory([])
+        i = 0
+        for page in html_doc:
+            print(f"parsing page {i}")
+            for message in Parser(page).get_messages().messages:
+                chat_history.messages.append(message)
+            i += 1
     bot_manager = BotManager(chat_history, first_bot, second_bot, third_bot)
     await bot_manager.send_chat_history()
 
