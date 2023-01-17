@@ -25,10 +25,12 @@ class FileReader:
             html_data = []
             with open("messages/messages.html") as file:
                 html_data.append("".join(file.read()))
-            for i in range(2, self.messages_count + 1):
-                print(f"read file {i}")
-                with open(f"messages/messages{i}.html", "r") as file:
-                    html_data.append("".join(file.read()))
+            with open("bot.log", "a") as log:
+                for i in range(2, self.messages_count + 1):
+                    log.write(f"read file {i}\n")
+                    log.flush()
+                    with open(f"messages/messages{i}.html", "r") as file:
+                        html_data.append("".join(file.read()))
             return html_data
         elif self.reading_mode == ReadingMode.FROM_ATTACHMENT:
             response = requests.get(self.attachment_url)

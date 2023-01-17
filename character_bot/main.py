@@ -1,6 +1,5 @@
 import asyncio
 import os
-import requests
 
 import dotenv
 
@@ -12,6 +11,7 @@ from character_bot.parser import Parser
 
 
 dotenv.load_dotenv()
+
 first_bot = Bot(name=os.getenv("KIVY_NAME"), prefix="!")
 second_bot = Bot(name=os.getenv("HORSE_NAME"), prefix="&")
 third_bot = Bot(name=os.getenv("SPY_NAME"), prefix="%")
@@ -33,11 +33,13 @@ async def start_dialogue(ctx):
     elif type(html_doc) == list:
         chat_history = ChatHistory([])
         i = 0
-        for page in html_doc:
-            print(f"parsing page {i}")
-            for message in Parser(page).get_messages().messages:
-                chat_history.messages.append(message)
-            i += 1
+        with open("bot.log", "a") as log:
+            for page in html_doc:
+                log.write(f"parsing page {i}\n")
+                log.flush()
+                for message in Parser(page).get_messages().messages:
+                    chat_history.messages.append(message)
+                i += 1
     bot_manager = BotManager(chat_history, first_bot, second_bot, third_bot)
     await bot_manager.send_chat_history()
 
