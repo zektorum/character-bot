@@ -7,6 +7,7 @@ from character_bot.message import Message
 class ChatHistory:
     def __init__(self, messages: List[Message]):
         self.messages = deque(messages)
+        messages.clear()
 
     def get_message(self):
         if len(self.messages) != 0:
